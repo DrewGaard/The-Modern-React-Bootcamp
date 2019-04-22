@@ -1,7 +1,7 @@
 class Slots extends React.Component {
 	render() {
         let msg;
-		if(this.props.s1 === this.props.s2 && this.props.s2 === this.props.s3) {
+		if((this.props.s1 === this.props.s2) && (this.props.s2 === this.props.s3)) {
 			msg = 
 				<div>
 					<h2>CONGRATS YOU WIN!</h2>

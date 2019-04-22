@@ -1,11 +1,11 @@
 function getOption() {
     const randNum = Math.floor(Math.random() * 3) + 1;
     if(randNum === 1){
-        return "X";
+        return "🍒";
     } else if(randNum === 1) {
-        return "Y";
+        return "🍇";
     } else {
-        return "Z";
+        return "🍋";
     }
 }
 
