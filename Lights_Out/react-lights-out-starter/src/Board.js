@@ -33,7 +33,7 @@ class Board extends Component {
   static defaultProps ={
     nrows: 5,
     ncols: 5,
-    chanceLightStartsOn: true
+    chanceLightStartsOn: 0.25
   };
   constructor(props) {
     super(props);
@@ -49,10 +49,11 @@ class Board extends Component {
     // TODO: create array-of-arrays of true/false values
 
     for(var i = 0; i < this.props.nrows; i++){
-      // for(var j = 0; j < this.props.ncols; j++) {
-      //    board[i][j] = true;
-      //  }
-      board[i] = [true, false];
+      let row = [];
+      for(var j = 0; j < this.props.ncols; j++) {
+          row.push(Math.random() < this.props.chanceLightStartsOn); //Math.random() < this.props.chanceLightStartsOn
+        }
+        board.push(row);
     }
 
     return board;
@@ -74,18 +75,75 @@ class Board extends Component {
       }
     }
 
+    flipCell(y,x);
+    flipCell(y,x + 1);
+    flipCell(y,x - 1);
+    flipCell(y+1,x);
+    flipCell(y-1,x);
+
+
+
     // TODO: flip this cell and the cells around it
 
     // win when every cell is turned off
+    let hasWon = false;
+    let count = 0;
+
+    for(var i = 0; i < this.props.nrows; i++) {
+      for(var j = 0; j < this.props.ncols; j++) {
+        if(board[i][j] === false){
+          count++;
+          //console.log(count);
+        }
+      }
+    }
+
+    if(count === (this.props.nrows * this.props.ncols)) {
+      hasWon = true;
+    }
+
+    //console.log(count);
+
     // TODO: determine is the game has been won
 
-    //this.setState({board, hasWon});
+    
+
+    this.setState({ board: board, hasWon:  hasWon});
   }
 
   renderBoard() {
-    return this.state.board.map(ltr => (
-      <Cell />
-    ));
+
+    if(this.state.hasWon) {
+      return (
+        <div className="Board-title">
+          <div className="winner">
+            <span className="neon-orange">YOU</span>
+            <span className="neon-blue">WIN!</span>
+          </div>
+        </div>
+      )
+    }
+
+    let printBoard = [];
+    for(var i = 0; i < this.props.nrows; i++) {
+      let row = [];
+      for(var j = 0; j < this.props.ncols; j++) {
+        let coord = `${i}-${j}`;
+        row.push(<Cell key={coord} isLit={this.state.board[i][j]} flipCellsAroundMe={() => this.flipCellsAround(coord)} />)
+      } 
+      printBoard.push(<tr key={i}>{row}</tr>);
+    }
+    return <div>
+            <div className="Board-title">
+              <div className="neon-orange">Lights</div>
+              <div className="neon-blue">Out</div>
+            </div>
+              <table className="Board">
+                <tbody>
+                  {printBoard}
+                </tbody>
+              </table>
+            </div>;
   }
 
 
@@ -99,14 +157,7 @@ class Board extends Component {
 
     // make table board
     <div>
-      <table>
-        <tbody>
-          <trow>
-            {this.renderBoard()}
-          </trow>
-        </tbody>
-      </table>
-
+      {this.renderBoard()}
     </div>
 
     // TODO
